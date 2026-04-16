@@ -2,7 +2,6 @@ from redis.asyncio import from_url
 
 from fastapi import FastAPI
 from fastapi_admin.app import app as admin_app
-from fastapi_admin.factory import app as admin_factory
 from fastapi_admin.providers.login import UsernamePasswordProvider
 
 from app.core.config import settings
@@ -18,4 +17,4 @@ async def configure_admin(app: FastAPI) -> None:
         providers=[UsernamePasswordProvider(admin_model=None)],
         redis=redis,
     )
-    app.mount("/admin-panel", admin_factory)
+    app.mount("/admin-panel", admin_app)
