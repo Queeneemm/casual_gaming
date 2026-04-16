@@ -1,6 +1,7 @@
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
+from fastapi.responses import FileResponse
 from sqlalchemy.ext.asyncio import AsyncEngine
 
 from app.admin_setup import configure_admin
@@ -35,3 +36,8 @@ app.include_router(admin.router)
 @app.get("/health")
 async def health() -> dict[str, str]:
     return {"status": "ok"}
+
+
+@app.get("/", include_in_schema=False)
+async def frontend() -> FileResponse:
+    return FileResponse("app/frontend/index.html")
