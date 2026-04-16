@@ -1,13 +1,18 @@
 from contextlib import asynccontextmanager
+import asyncio
+import logging
 
 from fastapi import FastAPI
 from fastapi.responses import FileResponse
+from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncEngine
 
 from app.admin_setup import configure_admin
 from app.api import admin, auth, tasks
 from app.db.session import engine
 from app.models.base import Base
+
+logger = logging.getLogger(__name__)
 
 
 @asynccontextmanager
@@ -23,8 +28,23 @@ async def lifespan(app: FastAPI):
 
 
 async def create_tables(async_engine: AsyncEngine) -> None:
-    async with async_engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
+    for attempt in range(1, 4):
+        try:
+            async with async_engine.begin() as conn:
+                await conn.run_sync(Base.metadata.create_all)
+            return
+        except SQLAlchemyError as exc:
+            logger.warning(
+                "Database is unavailable during startup (attempt %s/3): %s",
+                attempt,
+                exc,
+            )
+            if attempt == 3:
+                logger.warning(
+                    "Skipping table initialization after repeated DB connection failures."
+                )
+                return
+            await asyncio.sleep(1)
 
 
 app = FastAPI(title="Casual Gaming API", lifespan=lifespan)
