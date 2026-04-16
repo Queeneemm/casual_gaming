@@ -1,0 +1,27 @@
+[project]
+name = "casual-gaming"
+version = "0.1.0"
+description = "Team quest backend with timed tasks"
+requires-python = ">=3.11"
+dependencies = [
+  "fastapi>=0.116.0",
+  "uvicorn[standard]>=0.35.0",
+  "sqlalchemy>=2.0.41",
+  "asyncpg>=0.30.0",
+  "alembic>=1.16.0",
+  "pydantic-settings>=2.10.0",
+  "python-jose[cryptography]>=3.5.0",
+  "passlib[bcrypt]>=1.7.4",
+  "fastapi-admin>=1.0.4",
+  "redis>=6.1.0"
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.4.0",
+  "pytest-asyncio>=0.24.0",
+  "httpx>=0.28.0"
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
