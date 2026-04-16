@@ -30,9 +30,13 @@ ACCESS_TOKEN_EXPIRE_MINUTES=1440
 - `POST /admin/teams`
 - `POST /admin/tasks`
 - `GET /health`
+- `GET /` — demo фронт на HTML + React
 
 ## Что дальше
 - миграции через Alembic;
 - полноценные FastAPI Admin модели/ресурсы;
 - роли и granular permissions;
 - попытки сдачи заданий и scoring/leaderboard.
+
+
+После запуска откройте `http://localhost:8000/` — там доступен демо-фронт для входа и запроса активных задач.
